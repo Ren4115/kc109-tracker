@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>КЦ «109» — п.2 Плана: задачи сотрудников</title>
+<style>
+  :root{
+    --bg:#f6f6f4; --card:#fff; --line:#e3e3df; --text:#1d1d1b; --muted:#6b6b66;
+    --accent:#1f4e79; --red:#b42318; --redbg:#fdecea; --green:#1e6b3a; --greenbg:#e8f3ec;
+    --amber:#8a5a00; --amberbg:#fdf3dc; --gray:#55554f; --graybg:#efefec;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font:14px/1.45 -apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+  header{background:var(--card);border-bottom:1px solid var(--line);padding:14px 24px}
+  header h1{margin:0;font-size:18px;font-weight:600}
+  header .sub{color:var(--muted);margin-top:2px}
+  nav{display:flex;gap:4px;padding:0 24px;background:var(--card);border-bottom:1px solid var(--line)}
+  nav button{border:0;background:none;padding:10px 14px;font:inherit;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent}
+  nav button.active{color:var(--text);border-bottom-color:var(--accent);font-weight:600}
+  main{max-width:1100px;margin:0 auto;padding:20px 24px 60px}
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+  .toolbar .grow{flex:1}
+  select,input,textarea{font:inherit;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--text)}
+  textarea{width:100%;resize:vertical}
+  .btn{font:inherit;padding:7px 12px;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:pointer}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.danger{color:var(--red)}
+  .btn:hover{filter:brightness(.96)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:8px;margin-bottom:14px}
+  .card-h{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline}
+  .card-h .name{font-weight:600;font-size:15px}
+  .card-h .meta{color:var(--muted)}
+  table{width:100%;border-collapse:collapse}
+  th,td{text-align:left;padding:8px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.03em;background:#fafaf8}
+  tr:last-child td{border-bottom:0}
+  tr.click{cursor:pointer}
+  tr.click:hover td{background:#f9f9f6}
+  .nowrap{white-space:nowrap}
+  .muted{color:var(--muted)}
+  .pill{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;white-space:nowrap}
+  .s-todo{background:var(--graybg);color:var(--gray)}
+  .s-work{background:var(--amberbg);color:var(--amber)}
+  .s-done{background:var(--greenbg);color:var(--green)}
+  .overdue{color:var(--red);font-weight:600}
+  .tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;background:#e7eef6;color:var(--accent)}
+  .role-o{font-weight:600}
+  .empty{padding:14px 16px;color:var(--muted)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .box{padding:14px 16px}
+  .box h3{margin:0 0 8px;font-size:14px}
+  .box ul{margin:0;padding-left:18px}
+  .kv{display:grid;grid-template-columns:160px 1fr;gap:6px 12px;padding:14px 16px}
+  .kv div:nth-child(odd){color:var(--muted)}
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto;z-index:10}
+  .overlay.open{display:flex}
+  .modal{background:#fff;border-radius:10px;width:100%;max-width:680px;box-shadow:0 10px 40px rgba(0,0,0,.2)}
+  .modal-h{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .modal-h h2{margin:0;font-size:16px}
+  .modal-b{padding:16px 18px}
+  .modal-f{padding:12px 18px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end}
+  .field{margin-bottom:12px}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+  .field input,.field select{width:100%}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .checks{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;max-height:170px;overflow:auto;border:1px solid var(--line);border-radius:6px;padding:6px 10px}
+  .checks input{width:auto;margin:0}
+  .checks label{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--text);margin:0}
+  .comments{border-top:1px solid var(--line);margin-top:6px;padding-top:12px}
+  .comments h3{margin:0 0 8px;font-size:14px}
+  .cmt{padding:8px 10px;background:#fafaf8;border:1px solid var(--line);border-radius:6px;margin-bottom:8px}
+  .cmt .who{font-weight:600}
+  .cmt .when{color:var(--muted);font-size:12px;margin-left:6px}
+  .cmt .txt{white-space:pre-wrap;margin-top:2px}
+  .cmt .del{float:right;border:0;background:none;color:var(--muted);cursor:pointer;font-size:12px}
+  .cmt-form{display:grid;grid-template-columns:220px 1fr;gap:8px;align-items:start}
+  footer{max-width:1100px;margin:0 auto;padding:0 24px 30px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  footer button{font:inherit;font-size:12px;border:0;background:none;color:var(--muted);text-decoration:underline;cursor:pointer}
+  @media (max-width:760px){
+    .grid2,.row3,.cmt-form{grid-template-columns:1fr}
+    th,td{padding:8px 10px}
+    .hide-sm{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>КЦ «109» Акмолинской области — анализ и оценка соответствия (п.2 Плана)</h1>
+  <div class="sub" id="deadline"></div>
+</header>
+
+<nav id="tabs">
+  <button data-tab="people" class="active">Сотрудники</button>
+  <button data-tab="tasks">Все задачи</button>
+  <button data-tab="trip">Командировка</button>
+</nav>
+
+<main id="view"></main>
+
+<footer>
+  <span>Данные сохраняются в этом браузере.</span>
+  <span><button id="exportBtn">Скачать данные (JSON)</button> · <button id="resetBtn">Сбросить к исходным данным</button></span>
+</footer>
+
+<div class="overlay" id="overlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-h"><h2 id="mTitle">Задача</h2><button class="btn" id="mClose">✕</button></div>
+    <div class="modal-b" id="mBody"></div>
+    <div class="modal-f" id="mFoot"></div>
+  </div>
+</div>
+
+<script>
+/* ---------- исходные данные ---------- */
+const EMPLOYEES = [
+  {id:'mamazhanova', name:'Мамажанова Асель',             dir:'Выездное обследование КЦ'},
+  {id:'shaimardanov',name:'Шаймарданов Еркебулан',        dir:'Выездное обследование КЦ'},
+  {id:'baitanatov',  name:'Байтанатов Мухамеджан',        dir:'Выездное обследование КЦ'},
+  {id:'alzakhova',   name:'Альзахова Бану',               dir:'Выездное обследование КЦ'},
+  {id:'amantai',     name:'Амантай Айгерим Маратқызы',    dir:'Выездное обследование КЦ'},
+  {id:'kosobokova',  name:'Кособокова Оксана Валерьевна', dir:'Запуск пилота по Акмолинской области'},
+  {id:'kabieva',     name:'Кабиева Назгуль',              dir:'Запуск пилота по Акмолинской области'},
+  {id:'besebaeva',   name:'Бесебаева Назым',              dir:'Методология'},
+  {id:'kupzhanov',   name:'Купжанов Алмас',               dir:'Методология'},
+  {id:'almakhanov',  name:'Алмаханов Еркебулан',          dir:'Методология'}
+];
+const STAGES = {0:'Этап 0. Запуск',1:'Этап 1. Сбор данных',2:'Этап 2. Полевая работа',3:'Этап 3. Анализ',4:'Этап 4. Синтез',5:'Этап 5. Отчёт'};
+const STATUSES = {todo:'Не начато', work:'В работе', done:'Готово'};
+
+const SEED_TASKS = [
+  [0,'Запрос данных в КЦ «109» Акмолинской области','kosobokova',['kabieva'],'2026-11-16','work'],
+  [0,'Чек-лист соответствия стандартам и приказу о КЦ','besebaeva',['kupzhanov','almakhanov'],'2026-11-17','work'],
+  [0,'Анкета КЦ и гайд интервью','kupzhanov',['mamazhanova'],'2026-11-16','work'],
+  [0,'Методика выборки звонков для прослушивания','almakhanov',['amantai'],'2026-11-16','work'],
+  [1,'Статистика обращений за 12 месяцев (по месяцам): объём, каналы, тематики, ожидание, пропущенные, повторные','shaimardanov',['almakhanov'],'2026-11-20','todo'],
+  [1,'НПА, регламенты, учредительные документы, финансирование и подчинённость','kabieva',[],'2026-11-20','todo'],
+  [1,'Передача обращений в МИО, SLA, фактические сроки исполнения','kosobokova',[],'2026-11-20','todo'],
+  [1,'Штат, графики, текучесть, подбор, обучение, контроль качества','alzakhova',[],'2026-11-20','todo'],
+  [1,'Описание технологической платформы: телефония, IVR, учёт обращений, запись, база знаний, интеграции','baitanatov',[],'2026-11-20','todo'],
+  [1,'Хранение данных, сроки хранения записей, защита ПДн','baitanatov',[],'2026-11-20','todo'],
+  [2,'Командировка в Кокшетау: интервью с руководителем КЦ и супервайзерами','mamazhanova',['alzakhova','baitanatov','shaimardanov','amantai'],'2026-11-18','work'],
+  [2,'Интервью с акиматом и 2–3 профильными МИО','kosobokova',['kabieva','kupzhanov'],'2026-11-24','todo'],
+  [2,'Прослушивание выборки звонков, разбор жалоб, повторных обращений и эскалаций','amantai',['shaimardanov'],'2026-11-24','todo'],
+  [3,'Блок 1. Нормативная и организационная база + реестр НПА','kabieva',['besebaeva'],'2026-11-25','todo'],
+  [3,'Блок 2. Функциональная модель + реестр интеграций (в т.ч. SDU)','shaimardanov',['kosobokova'],'2026-11-25','todo'],
+  [3,'Блок 3. Технологии и информационная безопасность','baitanatov',[],'2026-11-25','todo'],
+  [3,'Блок 4. Персонал и управление, расчёт по Erlang C','alzakhova',['almakhanov'],'2026-11-25','todo'],
+  [3,'Блок 5. Качество обслуживания','amantai',['mamazhanova'],'2026-11-25','todo'],
+  [3,'Блок 6. Готовность к требованиям приказа о КЦ','kupzhanov',['baitanatov'],'2026-11-25','todo'],
+  [4,'Сводная матрица соответствия по блокам 1–6','almakhanov',['besebaeva'],'2026-11-26','todo'],
+  [4,'Реестр выявленных проблем (с ответственными по блокам)','kupzhanov',['mamazhanova'],'2026-11-26','todo'],
+  [4,'Процессы к совершенствованию и предложения для пилота (п.3)','kosobokova',['kabieva','besebaeva'],'2026-11-26','todo'],
+  [5,'Проект отчёта в АП РК','besebaeva',['kupzhanov','almakhanov'],'2026-11-26','todo'],
+  [5,'Согласование проекта отчёта','kosobokova',['mamazhanova'],'2026-11-27','todo'],
+  [5,'Доработка и подписание отчёта','besebaeva',['kosobokova'],'2026-11-29','todo'],
+  [5,'Внесение отчёта в АП РК','besebaeva',[],'2026-11-30','todo']
+];
+
+const SEED_TRIP = {
+  city:'г. Кокшетау, КЦ «109» Акмолинской области',
+  depart:'2026-11-16',
+  ret:'',
+  members:[
+    {id:'mamazhanova', role:'Руководитель группы', duties:'Встреча с руководством КЦ, вручение запроса данных, интервью с руководителем КЦ, ежедневная сводка по группе'},
+    {id:'shaimardanov',role:'Член группы', duties:'Выгрузка статистики за 12 месяцев, маршрутизация и классификатор тематик, передача данных в SDU, интервью с супервайзерами'},
+    {id:'baitanatov',  role:'Член группы', duties:'Осмотр платформы (телефония, IVR, учёт обращений, запись, база знаний), интеграции, хранение данных и защита ПДн'},
+    {id:'alzakhova',   role:'Член группы', duties:'Штатное расписание, графики, текучесть, обучение, контроль качества, интервью с супервайзерами'},
+    {id:'amantai',     role:'Член группы', duties:'Прослушивание выборки звонков, разбор жалоб, повторных обращений и эскалаций'}
+  ],
+  plan:[
+    ['16.11','Прибытие, встреча с руководством КЦ, вручение запроса данных, обзор рабочих мест операторов'],
+    ['17.11','Интервью с руководителем КЦ и супервайзерами по гайду, осмотр платформы'],
+    ['18.11 и далее','Прослушивание звонков, сбор документов, уточнения по запросу данных']
+  ],
+  prereq:'К выезду готовы: запрос данных (Кособокова О. В.), гайд интервью (Купжанов А.), методика выборки звонков (Алмаханов Е.)'
+};
+
+/* ---------- хранение ---------- */
+const KEY='kc109-tracker-v1';
+let mem=null;
+function freshState(){
+  return {
+    tasks: SEED_TASKS.map((t,i)=>({id:'t'+(i+1),stage:t[0],title:t[1],owner:t[2],co:t[3],due:t[4],status:t[5],desc:'',comments:[]})),
+    trip: JSON.parse(JSON.stringify(SEED_TRIP)),
+    lastAuthor:'', nextId: SEED_TASKS.length+1
+  };
+}
+function load(){
+  try{ const s=localStorage.getItem(KEY); if(s) return JSON.parse(s); }catch(e){}
+  return mem || freshState();
+}
+function save(){
+  mem=state;
+  try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){}
+}
+let state=load();
+
+/* ---------- утилиты ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const emp=id=>EMPLOYEES.find(e=>e.id===id);
+const short=id=>{const e=emp(id); if(!e) return '—'; const p=e.name.split(' '); return p[0]+' '+p.slice(1).map(x=>x[0]+'.').join(' ');};
+const todayISO=()=>{const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+const fmt=iso=>{ if(!iso) return '—'; const [y,m,d]=iso.split('-'); return d+'.'+m+'.'+y; };
+const isOver=t=>t.status!=='done' && t.due && t.due<todayISO();
+const pill=s=>`<span class="pill s-${s}">${STATUSES[s]}</span>`;
+const dueCell=t=>`<span class="nowrap ${isOver(t)?'overdue':''}">${fmt(t.due)}${isOver(t)?' · просрочено':''}</span>`;
+const tripIds=()=>state.trip.members.map(m=>m.id);
+const byDue=(a,b)=>(a.due||'9').localeCompare(b.due||'9')||a.stage-b.stage;
+
+function renderDeadline(){
+  const d=Math.ceil((new Date('2026-11-30T00:00:00')-new Date(todayISO()+'T00:00:00'))/864e5);
+  const open=state.tasks.filter(t=>t.status!=='done').length;
+  const over=state.tasks.filter(isOver).length;
+  $('#deadline').textContent=`Срок отчёта в АП РК — 30.11.2026 (осталось дней: ${Math.max(d,0)}). Открытых задач: ${open}${over?`, просрочено: ${over}`:''}.`;
+}
+
+/* ---------- вкладки ---------- */
+let tab='people';
+const filters={stage:'',person:'',status:'',q:''};
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
+  tab=b.dataset.tab;
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('active',x===b));
+  render();
+});
+
+function render(){
+  renderDeadline();
+  if(tab==='people') renderPeople();
+  if(tab==='tasks') renderTasks();
+  if(tab==='trip') renderTrip();
+}
+
+/* Сотрудники */
+function renderPeople(){
+  const trip=tripIds();
+  let html=`<div class="toolbar"><div class="grow muted">Задачи каждого сотрудника: <b>отв.</b> — ответственный, соисп. — соисполнитель. Нажмите на задачу, чтобы открыть её и оставить комментарий.</div>
+    <button class="btn primary" onclick="openTask()">+ Новая задача</button></div>`;
+  for(const e of EMPLOYEES){
+    const ts=state.tasks.filter(t=>t.owner===e.id||t.co.includes(e.id)).sort(byDue);
+    const open=ts.filter(t=>t.status!=='done');
+    const next=open[0];
+    html+=`<div class="card"><div class="card-h">
+      <span class="name">${esc(e.name)}</span>
+      <span class="meta">${esc(e.dir)}</span>
+      ${trip.includes(e.id)?`<span class="tag">Командировка с ${fmt(state.trip.depart)}, Кокшетау</span>`:''}
+      <span class="meta" style="margin-left:auto">задач: ${ts.length}, открыто: ${open.length}${next?`, ближайший срок: ${fmt(next.due)}`:''}</span>
+    </div>`;
+    if(!ts.length){ html+=`<div class="empty">Задач нет</div></div>`; continue; }
+    html+=`<table><thead><tr><th>Задача</th><th class="hide-sm">Этап</th><th>Роль</th><th>Срок</th><th>Статус</th></tr></thead><tbody>`;
+    for(const t of ts){
+      html+=`<tr class="click" onclick="openTask('${t.id}')">
+        <td>${esc(t.title)}${t.comments.length?` <span class="muted">· 💬 ${t.comments.length}</span>`:''}</td>
+        <td class="hide-sm muted nowrap">${t.stage}</td>
+        <td class="nowrap ${t.owner===e.id?'role-o':'muted'}">${t.owner===e.id?'отв.':'соисп.'}</td>
+        <td>${dueCell(t)}</td><td>${pill(t.status)}</td></tr>`;
+    }
+    html+=`</tbody></table></div>`;
+  }
+  $('#view').innerHTML=html;
+}
+
+/* Все задачи */
+function renderTasks(){
+  const opt=(o,v)=>Object.entries(o).map(([k,l])=>`<option value="${k}" ${String(v)===String(k)?'selected':''}>${esc(l)}</option>`).join('');
+  const people=Object.fromEntries(EMPLOYEES.map(e=>[e.id,e.name]));
+  let list=state.tasks.filter(t=>
+    (filters.stage===''||String(t.stage)===filters.stage)&&
+    (!filters.person||t.owner===filters.person||t.co.includes(filters.person))&&
+    (!filters.status||(filters.status==='over'?isOver(t):t.status===filters.status))&&
+    (!filters.q||t.title.toLowerCase().includes(filters.q.toLowerCase()))
+  ).sort(byDue);
+  let html=`<div class="toolbar">
+    <select onchange="filters.stage=this.value;render()"><option value="">Все этапы</option>${opt(STAGES,filters.stage)}</select>
+    <select onchange="filters.person=this.value;render()"><option value="">Все сотрудники</option>${opt(people,filters.person)}</select>
+    <select onchange="filters.status=this.value;render()"><option value="">Любой статус</option>${opt({...STATUSES,over:'Просрочено'},filters.status)}</select>
+    <input placeholder="Поиск по названию" value="${esc(filters.q)}" oninput="filters.q=this.value;clearTimeout(window._q);window._q=setTimeout(()=>{render();const i=document.querySelector('.toolbar input');i.focus();i.setSelectionRange(i.value.length,i.value.length)},250)">
+    <div class="grow"></div>
+    <button class="btn primary" onclick="openTask()">+ Новая задача</button></div>`;
+  html+=`<div class="card"><table><thead><tr><th>Срок</th><th>Задача</th><th>Ответственный</th><th class="hide-sm">Соисполнители</th><th>Статус</th></tr></thead><tbody>`;
+  if(!list.length) html+=`<tr><td colspan="5" class="empty">Ничего не найдено</td></tr>`;
+  for(const t of list){
+    html+=`<tr class="click" onclick="openTask('${t.id}')">
+      <td>${dueCell(t)}</td>
+      <td>${esc(t.title)}<div class="muted" style="font-size:12px">${STAGES[t.stage]}${t.comments.length?` · 💬 ${t.comments.length}`:''}</div></td>
+      <td class="nowrap">${esc(short(t.owner))}</td>
+      <td class="hide-sm muted">${t.co.map(short).map(esc).join(', ')||'—'}</td>
+      <td>${pill(t.status)}</td></tr>`;
+  }
+  html+=`</tbody></table></div>`;
+  $('#view').innerHTML=html;
+}
+
+/* Командировка */
+function renderTrip(){
+  const tr=state.trip;
+  let html=`<div class="card"><div class="card-h"><span class="name">Командировка: ${esc(tr.city)}</span></div>
+    <div class="kv">
+      <div>Дата выезда</div><div><input type="date" value="${tr.depart}" onchange="state.trip.depart=this.value;save();render()"></div>
+      <div>Дата возвращения</div><div><input type="date" value="${tr.ret}" onchange="state.trip.ret=this.value;save();render()"> ${tr.ret?'':'<span class="overdue" style="font-weight:400">не указана</span>'}</div>
+      <div>Состав</div><div>${tr.members.length} человек</div>
+      <div>Условие выезда</div><div>${esc(tr.prereq)}</div>
+    </div></div>`;
+  html+=`<div class="card"><table><thead><tr><th>№</th><th>ФИО</th><th>Роль</th><th>Задачи на месте</th></tr></thead><tbody>`;
+  tr.members.forEach((m,i)=>{ html+=`<tr><td>${i+1}</td><td class="nowrap">${esc(emp(m.id).name)}</td><td class="nowrap">${esc(m.role)}</td><td>${esc(m.duties)}</td></tr>`; });
+  html+=`</tbody></table></div>`;
+  html+=`<div class="card"><div class="card-h"><span class="name">План на месте</span></div><table><tbody>`;
+  tr.plan.forEach(p=>{ html+=`<tr><td class="nowrap" style="width:140px"><b>${esc(p[0])}</b></td><td>${esc(p[1])}</td></tr>`; });
+  html+=`</tbody></table></div>`;
+  $('#view').innerHTML=html;
+}
+
+/* ---------- карточка задачи ---------- */
+let current=null;
+function openTask(id){
+  const isNew=!id;
+  const t=isNew?{id:'',stage:0,title:'',owner:EMPLOYEES[0].id,co:[],due:todayISO(),status:'todo',desc:'',comments:[]}:state.tasks.find(x=>x.id===id);
+  current=t.id;
+  $('#mTitle').textContent=isNew?'Новая задача':'Задача';
+  const so=(o,v)=>Object.entries(o).map(([k,l])=>`<option value="${k}" ${String(v)===String(k)?'selected':''}>${esc(l)}</option>`).join('');
+  const people=Object.fromEntries(EMPLOYEES.map(e=>[e.id,e.name]));
+  let b=`
+    <div class="field"><label>Название</label><input id="fTitle" value="${esc(t.title)}" placeholder="Что нужно сделать"></div>
+    <div class="row3">
+      <div class="field"><label>Этап</label><select id="fStage">${so(STAGES,t.stage)}</select></div>
+      <div class="field"><label>Срок</label><input type="date" id="fDue" value="${t.due}"></div>
+      <div class="field"><label>Статус</label><select id="fStatus">${so(STATUSES,t.status)}</select></div>
+    </div>
+    <div class="field"><label>Ответственный</label><select id="fOwner">${so(people,t.owner)}</select></div>
+    <div class="field"><label>Соисполнители</label><div class="checks">${EMPLOYEES.map(e=>`<label><input type="checkbox" value="${e.id}" ${t.co.includes(e.id)?'checked':''}> ${esc(e.name)}</label>`).join('')}</div></div>
+    <div class="field"><label>Описание / результат</label><textarea id="fDesc" rows="3" placeholder="Что должно получиться, где лежит результат">${esc(t.desc)}</textarea></div>`;
+  if(!isNew){
+    b+=`<div class="comments"><h3>Комментарии (${t.comments.length})</h3>`;
+    if(!t.comments.length) b+=`<div class="muted" style="margin-bottom:8px">Комментариев пока нет</div>`;
+    for(const c of t.comments){
+      b+=`<div class="cmt"><button class="del" title="Удалить" onclick="delComment('${c.id}')">удалить</button>
+        <span class="who">${esc(short(c.author))}</span><span class="when">${esc(c.when)}</span>
+        <div class="txt">${esc(c.text)}</div></div>`;
+    }
+    b+=`<div class="cmt-form">
+        <select id="cAuthor"><option value="">Кто пишет…</option>${so(people,state.lastAuthor)}</select>
+        <textarea id="cText" rows="2" placeholder="Комментарий"></textarea>
+      </div>
+      <div style="text-align:right;margin-top:6px"><button class="btn" onclick="addComment()">Добавить комментарий</button></div>
+    </div>`;
+  }
+  $('#mBody').innerHTML=b;
+  $('#mFoot').innerHTML=(isNew?'':`<button class="btn danger" onclick="delTask()" style="margin-right:auto">Удалить задачу</button>`)+
+    `<button class="btn" onclick="closeModal()">Отмена</button><button class="btn primary" onclick="saveTask()">Сохранить</button>`;
+  $('#overlay').classList.add('open');
+  setTimeout(()=>$('#fTitle').focus(),30);
+}
+function readForm(){
+  return {
+    title:$('#fTitle').value.trim(), stage:+$('#fStage').value, due:$('#fDue').value,
+    status:$('#fStatus').value, owner:$('#fOwner').value, desc:$('#fDesc').value.trim(),
+    co:[...document.querySelectorAll('.checks input:checked')].map(i=>i.value).filter(v=>v!==$('#fOwner').value)
+  };
+}
+function saveTask(){
+  const f=readForm();
+  if(!f.title){ $('#fTitle').style.borderColor='var(--red)'; $('#fTitle').focus(); return; }
+  if(current){ Object.assign(state.tasks.find(x=>x.id===current),f); }
+  else{ state.tasks.push({id:'t'+(state.nextId++),...f,comments:[]}); }
+  save(); closeModal(); render();
+}
+function delTask(){
+  const t=state.tasks.find(x=>x.id===current);
+  if(!t) return;
+  const btn=event.target;
+  if(btn.dataset.confirm!=='1'){ btn.dataset.confirm='1'; btn.textContent='Точно удалить?'; return; }
+  state.tasks=state.tasks.filter(x=>x.id!==current);
+  save(); closeModal(); render();
+}
+function addComment(){
+  const a=$('#cAuthor').value, txt=$('#cText').value.trim();
+  if(!a){ $('#cAuthor').style.borderColor='var(--red)'; return; }
+  if(!txt){ $('#cText').style.borderColor='var(--red)'; return; }
+  const t=state.tasks.find(x=>x.id===current);
+  Object.assign(t,readForm()); // не терять несохранённые правки полей
+  const d=new Date();
+  t.comments.push({id:'c'+Date.now(),author:a,text:txt,when:d.toLocaleDateString('ru-RU')+' '+d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})});
+  state.lastAuthor=a; save(); openTask(current); render();
+}
+function delComment(cid){
+  const t=state.tasks.find(x=>x.id===current);
+  t.comments=t.comments.filter(c=>c.id!==cid); save(); openTask(current); render();
+}
+function closeModal(){ $('#overlay').classList.remove('open'); current=null; }
+$('#mClose').onclick=closeModal;
+$('#overlay').addEventListener('mousedown',e=>{ if(e.target.id==='overlay') closeModal(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+/* ---------- сервис ---------- */
+$('#exportBtn').onclick=()=>{
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kc109-data-'+todayISO()+'.json'; a.click();
+};
+$('#resetBtn').onclick=e=>{
+  const b=e.target;
+  if(b.dataset.confirm!=='1'){ b.dataset.confirm='1'; b.textContent='Нажмите ещё раз — все изменения пропадут'; setTimeout(()=>{b.dataset.confirm='';b.textContent='Сбросить к исходным данным';},4000); return; }
+  state=freshState(); save(); b.dataset.confirm=''; b.textContent='Сбросить к исходным данным'; render();
+};
+
+render();
+</script>
+</body>
+</html>
